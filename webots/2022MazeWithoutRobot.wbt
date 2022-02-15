@@ -2,8 +2,9 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.43229655320759547 -0.283747416992186 -0.8559247007973864 4.051173309184065
-  position 0.48841142167374924 -1.1396074006908226 1.034225304185293
+  orientation -0.22796742878047793 -0.21128616099359296 0.9504677846133489 4.585949389057016
+  position -0.061690162550010155 -0.5078959599303844 0.06825177273303563
+  follow "e-puck"
 }
 TexturedBackground {
 }
@@ -407,7 +408,7 @@ Solid {
   ]
   name "solid(18)"
   boundingObject Box {
-    size 0.24 0.24 0.08
+    size 0.24 0.12 0.08
   }
 }
 Solid {
@@ -430,6 +431,12 @@ Robot {
   translation -0.05999999999983014 -0.6500000000992185 -6.396199579014779e-05
   rotation 1.2058583254247737e-10 2.3226040973753037e-09 1 1.5708003061004263
   children [
+    TouchSensor {
+      translation 0.035 0.007 0.011
+      boundingObject Box {
+        size 0.001 0.003 0.003
+      }
+    }
     HingeJoint {
       jointParameters HingeJointParameters {
         position -3.100664321507215e-08
