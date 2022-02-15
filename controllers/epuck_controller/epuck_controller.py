@@ -1,32 +1,42 @@
-"""epuck_controller controller."""
+from controller import Robot, Motor, Compass, DistanceSensor, TouchSensor
 
-# You may need to import some classes of the controller module. Ex:
-#  from controller import Robot, Motor, DistanceSensor
-from controller import Robot
+# Global Time-step Constant
+TIMESTEP = 64
 
-# create the Robot instance.
-robot = Robot()
 
-# get the time step of the current world.
-timestep = int(robot.getBasicTimeStep())
+# Controller function for robot
+def exec_robot(robot):
+    # this is specified in the documentation
+    max_speed = 6.28
 
-# You should insert a getDevice-like function in order to get the
-# instance of a device of the robot. Something like:
-#  motor = robot.getDevice('motorname')
-#  ds = robot.getDevice('dsname')
-#  ds.enable(timestep)
+    # get the motor, enable, and set motor devices
+    left_motor = robot.getDevice('left wheel motor')
+    right_motor = robot.getDevice('right wheel motor')
 
-# Main loop:
-# - perform simulation steps until Webots is stopping the controller
-while robot.step(timestep) != -1:
-    # Read the sensors:
-    # Enter here functions to read sensor data, like:
-    #  val = ds.getValue()
+    left_motor.setPosition(float('inf'))
+    left_motor.setVelocity(0.0)
 
-    # Process sensor data here.
+    right_motor.setPosition(float('inf'))
+    right_motor.setVelocity(0.0)
 
-    # Enter here functions to send actuator commands, like:
-    #  motor.setPosition(10.0)
-    pass
+    # get and enable all the proximity sensors (ps0-ps7)
+    sensors = []
+    for i in range(8):
+        sensor_name = 'ps' + str(i)
+        sensors.append(robot.getDevice(sensor_name))
+        sensors[i].enable(TIMESTEP)
 
-# Enter here exit cleanup code.
+    # main loop
+    while robot.step(TIMESTEP) != -1:
+        for i in range(8):
+            print("Index: {}, Value: {}".format(i, sensors[i].getValue()))
+
+        left_motor.setVelocity(max_speed)
+        right_motor.setVelocity(max_speed)
+
+
+# Main
+if __name__ == "__main__":
+    my_robot = Robot()
+    print("Starting Robot")
+    exec_robot(my_robot)
