@@ -7,7 +7,7 @@ TIMESTEP = 64
 # Controller function for robot
 def exec_robot(robot):
     # this is specified in the documentation
-    max_speed = 6.28
+    max_speed = 6.28 / 2
 
     # get the motor, enable, and set motor devices
     left_motor = robot.getDevice('left wheel motor')
@@ -28,11 +28,35 @@ def exec_robot(robot):
 
     # main loop
     while robot.step(TIMESTEP) != -1:
+        # print the sensor and its corresponding value
         for i in range(8):
-            print("Index: {}, Value: {}".format(i, sensors[i].getValue()))
+            print("Sensor: {}, Value: {}".format(i, sensors[i].getValue()))
 
-        left_motor.setVelocity(max_speed)
-        right_motor.setVelocity(max_speed)
+        # interpret prox sensor data
+        right_wall = sensors[2].getValue() > 80
+        front_wall = sensors[0].getValue() > 80
+
+        # set initial speeds
+        left_speed = max_speed
+        right_speed = max_speed
+
+        if front_wall:
+            print("Rotate left")
+            left_speed = -max_speed
+            right_speed = max_speed
+        else:
+            if right_wall:
+                print("Advance")
+                left_speed = max_speed
+                right_speed = max_speed
+            else:
+                print("Turn right")
+                left_speed = max_speed/2
+                right_speed = max_speed/4
+
+        # move the e-fuck
+        left_motor.setVelocity(left_speed)
+        right_motor.setVelocity(right_speed)
 
 
 # Main
