@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.22796742878047793 -0.21128616099359296 0.9504677846133489 4.585949389057016
-  position -0.061690162550010155 -0.5078959599303844 0.06825177273303563
+  orientation 0.4661909826805242 -0.4209377612689542 -0.7781242630873606 4.366512989418689
+  position -0.09148228365070468 -1.1179043459946214 1.6496547959674746
   follow "e-puck"
 }
 TexturedBackground {
@@ -428,18 +428,18 @@ Solid {
   }
 }
 Robot {
-  translation -0.05999999999983014 -0.6500000000992185 -6.396199579014779e-05
-  rotation 1.2058583254247737e-10 2.3226040973753037e-09 1 1.5708003061004263
+  translation -0.0500061 -0.663118 -0.000794324
+  rotation 0.0011115796863008054 0.0011527396746850343 0.9999987177900997 1.57082
   children [
     TouchSensor {
-      translation 0.035 0.007 0.011
+      translation 0.0341 0 0.005
       boundingObject Box {
-        size 0.001 0.003 0.003
+        size 0.008 0.002 0.002
       }
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position -3.100664321507215e-08
+        position 529.8389627108438
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -456,7 +456,7 @@ Robot {
       ]
       endPoint DEF EPUCK_LEFT_WHEEL Solid {
         translation 0 0.026 0.02
-        rotation 0 -1 0 2.9802322387695313e-08
+        rotation 0 1 0 2.051396907758552
         children [
           DEF EPUCK_WHEEL Transform {
             rotation 1 0 0 -1.570796
@@ -592,7 +592,7 @@ Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position -3.100668985371603e-08
+        position 534.2351764922861
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -609,7 +609,7 @@ Robot {
       ]
       endPoint DEF EPUCK_RIGHT_WHEEL Solid {
         translation 0 -0.026 0.02
-        rotation 0 -1 0 2.9802322387695313e-08
+        rotation 0 -1 0 6.11875992515835
         children [
           Transform {
             rotation 1 0 0 3.14159
