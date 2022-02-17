@@ -1,4 +1,4 @@
-from controller import Robot, Motor, Compass, DistanceSensor, TouchSensor
+from controller import Robot, sys
 
 # Global Time-step Constant
 TIMESTEP = 64
@@ -51,23 +51,26 @@ def exec_robot(robot):
         else:
             if right_wall:
                 print("Advance")
-                left_speed = max_speed
-                right_speed = max_speed
+                left_speed = max_speed * 2
+                right_speed = max_speed * 2
             else:
                 print("Turn right")
-                left_speed = max_speed
+                left_speed = max_speed * 3
                 right_speed = 0
+        # exit program execution once touch sensor trips
         print(touch.getValue())
         if touch.getValue() > 0:
             print("HIT")
-            left_motor.setVelocity(0)
-            right_motor.SetVelocity(0)
             break
 
         # move the e-fuck
         left_motor.setVelocity(left_speed)
         right_motor.setVelocity(right_speed)
 
+    print("Break from loop")
+    left_motor.setVelocity(0.0)
+    print("In line")
+    right_motor.setVeloicy(0.0)
 
 
 # Main
