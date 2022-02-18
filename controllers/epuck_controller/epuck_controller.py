@@ -1,80 +1,131 @@
-from controller import Robot, sys
-
-# Global Time-step Constant
-TIMESTEP = 64
+from controller import Robot, TouchSensor, Device, Motor, sys
 
 
-# Controller function for robot
-def exec_robot(robot):
-    # this is specified in the documentation
-    max_speed = 6.28 / 4
+class RobotOperator:
+    # constructor / enable devices
+    def __init__(self):
+        # constants
+        self.TIMESTEP = 64
+        # 6.28 is the max speed, but is too fast to properly run
+        self.MAXSPEED = 6.28 / 4
 
-    # get the motors, enable, and set motor devices
-    left_motor = robot.getDevice('left wheel motor')
-    right_motor = robot.getDevice('right wheel motor')
+        # set and enable motors and touch sensor
+        self.robot = Robot()
+        self.left_motor = self.robot.getDevice('left wheel motor')
+        self.left_motor.setPosition(float('inf'))
 
-    left_motor.setPosition(float('inf'))
-    left_motor.setVelocity(0.0)
+        self.right_motor = self.robot.getDevice('right wheel motor')
+        self.right_motor.setPosition(float('inf'))
 
-    right_motor.setPosition(float('inf'))
-    right_motor.setVelocity(0.0)
+        self.touch = self.robot.getDevice('touch sensor')
+        self.touch.enable(self.TIMESTEP)
 
-    # get and enable all the proximity sensors (ps0-ps7)
-    sensors = []
-    for i in range(8):
-        sensor_name = 'ps' + str(i)
-        sensors.append(robot.getDevice(sensor_name))
-        sensors[i].enable(TIMESTEP)
-
-    # get and enable touch sensor
-    touch = robot.getDevice('touch sensor')
-    touch.enable(TIMESTEP)
-
-    # main loop
-    while robot.step(TIMESTEP) != -1:
-        # print the sensor and its corresponding value
+        self.sensors = []
         for i in range(8):
-            print("Sensor: {}, Value: {}".format(i, sensors[i].getValue()))
+            sensor_name = 'ps' + str(i)
+            self.sensors.append(self.robot.getDevice(sensor_name))
+            self.sensors[i].enable(self.TIMESTEP)
 
-        # interpret prox sensor data
-        right_wall = sensors[2].getValue() > 180
-        front_wall = sensors[0].getValue() > 250
+    def set_velocity(self, left_velocity, right_velocity):
+        self.left_motor.setVelocity(left_velocity)
+        self.right_motor.setVelocity(right_velocity)
 
-        # set initial speeds
-        left_speed = max_speed
-        right_speed = max_speed
-
-        if front_wall or sensors[1].getValue() > 500:
-            print("Rotate left")
-            left_speed = -max_speed
-            right_speed = max_speed
+    def contact(self):
+        if self.touch.getValue() > 0:
+            return True
         else:
-            if right_wall:
-                print("Advance")
-                left_speed = max_speed * 2
-                right_speed = max_speed * 2
+            return False
+
+    def wall_front_right(self):
+        if self.sensors[0].getValue() > 250:
+            return True
+        else:
+            return False
+
+    def wall_right_diagonal(self):
+        if self.sensors[1].getValue() > 500:
+            return True
+        else:
+            return False
+
+    def wall_right(self):
+        if self.sensors[2].getValue() > 180:
+            return True
+        else:
+            return False
+
+    def wall_front_left(self):
+        if self.sensors[7].getValue() > 250:
+            return True
+        else:
+            return False
+
+    def wall_left_diagonal(self):
+        if self.sensors[6].getValue() > 500:
+            return True
+        else:
+            return False
+
+    def wall_left(self):
+        if self.sensors[5].getValue() > 180:
+            return True
+        else:
+            return False
+
+    def right_hand_rule(self):
+        while self.robot.step(self.TIMESTEP) != -1:
+            # set initial velocity to zero
+            self.set_velocity(0, 0)
+
+            # print each sensor and its corresponding value
+            for i in range(8):
+                print("Sensor: {}, Value: {}".format(i, self.sensors[i].getValue()))
+
+            if self.contact():
+                print("Win")
+                self.set_velocity(0, 0)
+                sys.exit(0)
+            elif self.wall_front_right() or self.wall_right_diagonal():
+                print("Rotate Left")
+                self.set_velocity(-self.MAXSPEED, self.MAXSPEED)
             else:
-                print("Turn right")
-                left_speed = max_speed * 3
-                right_speed = 0
-        # exit program execution once touch sensor trips
-        print(touch.getValue())
-        if touch.getValue() > 0:
-            print("HIT")
-            break
+                if self.wall_right():
+                    print("Advance")
+                    self.set_velocity(self.MAXSPEED * 2, self.MAXSPEED * 2)
+                else:
+                    print("Turn Right")
+                    self.set_velocity(self.MAXSPEED * 3, 0)
 
-        # move the e-fuck
-        left_motor.setVelocity(left_speed)
-        right_motor.setVelocity(right_speed)
+    def left_hand_rule(self):
+        while self.robot.step(self.TIMESTEP) != -1:
+            # set initial velocity to zero
+            self.set_velocity(0, 0)
 
-    print("Break from loop")
-    left_motor.setVelocity(0.0)
-    print("In line")
-    right_motor.setVeloicy(0.0)
+            # print each sensor and its corresponding value
+            for i in range(8):
+                print("Sensor: {}, Value: {}".format(i, self.sensors[i].getValue()))
+
+            if self.contact():
+                print("Win")
+                self.set_velocity(0, 0)
+                sys.exit(0)
+            elif self.wall_front_left() or self.wall_left_diagonal():
+                print("Rotate Right")
+                self.set_velocity(self.MAXSPEED, -self.MAXSPEED)
+            else:
+                if self.wall_left():
+                    print("Advance")
+                    self.set_velocity(self.MAXSPEED * 2, self.MAXSPEED * 2)
+                else:
+                    print("Turn Left")
+                    self.set_velocity(0, self.MAXSPEED * 3)
 
 
-# Main
-if __name__ == "__main__":
-    my_robot = Robot()
-    print("Starting Robot")
-    exec_robot(my_robot)
+def main():
+    new_robot = RobotOperator()
+    # new_robot.right_hand_rule()
+    new_robot.left_hand_rule()
+
+
+if __name__ == '__main__':
+    main()
