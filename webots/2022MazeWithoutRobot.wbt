@@ -3,7 +3,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.5773502691896258 -0.5773502691896258 -0.5773502691896258 4.188785307179587
-  position -0.050854896264719694 -0.6634837879400516 1.1416297250392686
+  position -0.06085065833084255 -0.6634795499941881 1.2075314859284627
   follow "e-puck"
 }
 TexturedBackground {
@@ -412,7 +412,7 @@ Solid {
   }
 }
 Solid {
-  translation -0.47 0.66 -1.73472e-18
+  translation -0.06 0 -1.73472e-18
   children [
     Shape {
       geometry Cylinder {
@@ -428,7 +428,7 @@ Solid {
   }
 }
 Robot {
-  translation -0.0500061 -0.663118 -0.000794324
+  translation -0.06 -0.6 -4.12693e-05
   rotation 0.0011115796863008054 0.0011527396746850343 0.9999987177900997 1.57082
   children [
     TouchSensor {
@@ -455,7 +455,7 @@ Robot {
         }
       ]
       endPoint DEF EPUCK_LEFT_WHEEL Solid {
-        translation 0 0.026 0.02
+        translation 0 0.026000000000000013 0.02
         rotation 0 1 0 2.051396907758552
         children [
           DEF EPUCK_WHEEL Transform {
@@ -608,7 +608,7 @@ Robot {
         }
       ]
       endPoint DEF EPUCK_RIGHT_WHEEL Solid {
-        translation 0 -0.026 0.02
+        translation 0 -0.025999999999999992 0.02
         rotation 0 -1 0 6.11875992515835
         children [
           Transform {

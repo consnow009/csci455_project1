@@ -6,20 +6,25 @@ class RobotOperator:
     def __init__(self):
         # constants
         self.TIMESTEP = 64
-        # 6.28 is the max speed, but is too fast to properly run
+        # 6.28 is the max speed, but is too fast to run properly
         self.MAXSPEED = 6.28 / 4
 
         # set and enable motors and touch sensor
         self.robot = Robot()
+
+        # get and enable left motor
         self.left_motor = self.robot.getDevice('left wheel motor')
         self.left_motor.setPosition(float('inf'))
 
+        # get and enable right motor
         self.right_motor = self.robot.getDevice('right wheel motor')
         self.right_motor.setPosition(float('inf'))
 
+        # get and enable touch sensor
         self.touch = self.robot.getDevice('touch sensor')
         self.touch.enable(self.TIMESTEP)
 
+        # get the sensor names and append them to the list
         self.sensors = []
         for i in range(8):
             sensor_name = 'ps' + str(i)
@@ -84,6 +89,7 @@ class RobotOperator:
             if self.contact():
                 print("Win")
                 self.set_velocity(0, 0)
+                #saveExperimentData()
                 sys.exit(0)
             elif self.wall_front_right() or self.wall_right_diagonal():
                 print("Rotate Left")
@@ -108,6 +114,7 @@ class RobotOperator:
             if self.contact():
                 print("Win")
                 self.set_velocity(0, 0)
+                #saveExperimentData()
                 sys.exit(0)
             elif self.wall_front_left() or self.wall_left_diagonal():
                 print("Rotate Right")
@@ -123,8 +130,8 @@ class RobotOperator:
 
 def main():
     new_robot = RobotOperator()
-    # new_robot.right_hand_rule()
-    new_robot.left_hand_rule()
+    new_robot.right_hand_rule()
+    # new_robot.left_hand_rule()
 
 
 if __name__ == '__main__':
