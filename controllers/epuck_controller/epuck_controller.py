@@ -1,4 +1,7 @@
-from controller import Robot, TouchSensor, Device, Motor, sys
+import sys
+import time
+
+from controller import Robot
 
 
 class RobotOperator:
@@ -77,7 +80,7 @@ class RobotOperator:
         else:
             return False
 
-    def right_hand_rule(self):
+    def right_hand_rule(self, start_time):
         while self.robot.step(self.TIMESTEP) != -1:
             # set initial velocity to zero
             self.set_velocity(0, 0)
@@ -89,7 +92,7 @@ class RobotOperator:
             if self.contact():
                 print("Win")
                 self.set_velocity(0, 0)
-                #saveExperimentData()
+                print("--- %s seconds ---" % (time.time() - start_time))
                 sys.exit(0)
             elif self.wall_front_right() or self.wall_right_diagonal():
                 print("Rotate Left")
@@ -102,7 +105,7 @@ class RobotOperator:
                     print("Turn Right")
                     self.set_velocity(self.MAXSPEED * 3, 0)
 
-    def left_hand_rule(self):
+    def left_hand_rule(self, start_time):
         while self.robot.step(self.TIMESTEP) != -1:
             # set initial velocity to zero
             self.set_velocity(0, 0)
@@ -114,7 +117,7 @@ class RobotOperator:
             if self.contact():
                 print("Win")
                 self.set_velocity(0, 0)
-                #saveExperimentData()
+                print("--- %s seconds ---" % (time.time() - start_time))
                 sys.exit(0)
             elif self.wall_front_left() or self.wall_left_diagonal():
                 print("Rotate Right")
@@ -129,9 +132,10 @@ class RobotOperator:
 
 
 def main():
+    start_time = time.time()
     new_robot = RobotOperator()
-    new_robot.right_hand_rule()
-    # new_robot.left_hand_rule()
+    new_robot.right_hand_rule(start_time)
+    # new_robot.left_hand_rule(start_time)
 
 
 if __name__ == '__main__':
